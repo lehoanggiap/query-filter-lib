@@ -1,0 +1,22 @@
+Pizza -> hot dog
+
+->
+
+DataTable -> JoinDataTable
+
+Table -> condition
+Chaining ->
+
+Build out from table
+
+TableQuery
+JoinTableQuery -> ten table
+SingleTableQuery -> ten table
+MultipleTableQuery -> ten table
+
+Create a class like Duck
+But the duck always stay the same
+Since any SQL can have condition or don’t have condition ?
+
+Any SQL can have fields or don’t have
+Any SQL can have jointable or not
