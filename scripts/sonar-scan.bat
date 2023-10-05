@@ -2,7 +2,7 @@
 
 :: Test the connection to sonarqube local
 call:check_connection
-if not errorlevel 0 (
+if not %ERRORLEVEL% == 0 (
     echo Starting sonarqube....
     START StartSonar.bat
     echo Go go http://localhost:9000
@@ -10,7 +10,7 @@ if not errorlevel 0 (
     echo "Pausing...., you can press any key to exit if sonarqube is up"
     pause
     call:check_connection
-    if errorlevel 0 call:end
+    if not %ERRORLEVEL% == 0 call:end
 )
 
 goto:SonarScan
@@ -36,7 +36,7 @@ goto:eof
 :check_connection
     echo Testing connection to sonarqube...
     echo %windir%
-    netstat -n | find 9000 2> nul 1> nul
+    powershell Test-NetConnection 127.0.0.1 -p 9000 | findstr "TcpTestSucceeded : True" >nul
 goto:eof
 
 
