@@ -1,30 +1,30 @@
 package com.giaplh.libraryweb.queryfiler.query.constraint;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 public class TableConstraintTest {
-
-    private static final HashSet<String> exposedColumns = new HashSet<>();
-
+    private static final HashMap<String, Class<?>> exposedColumns = new HashMap<>();
 
     @BeforeAll
     public static void init() {
-        exposedColumns.add("col1");
-        exposedColumns.add("col2");
-        exposedColumns.add("col3");
+        exposedColumns.put("col1", String.class);
+        exposedColumns.put("col2", Integer.class);
+        exposedColumns.put("col3", Double.class);
     }
 
     @Test
     public void givenNull_whenInitTableConstraint_ThenThrowException() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            TableConstraint tableConstraint = new TableConstraint(null);
-        });
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+                TableConstraint tableConstraint = new TableConstraint(null);
+            }
+        );
     }
 
     @Test
@@ -46,5 +46,4 @@ public class TableConstraintTest {
         TableConstraint tableConstraint = new TableConstraint(exposedColumns);
         Assertions.assertFalse(tableConstraint.validateFields(validFields));
     }
-
 }
