@@ -30,13 +30,17 @@ goto:eof
     -Dsonar.host.url=http://localhost:9000 ^
     -Dsonar.sources=src/main/java/ ^
     -Dsonar.java.binaries=target/classes ^
+    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
     -Dsonar.token=%sonar_token%
 goto:eof
 
 :check_connection
     echo Testing connection to sonarqube...
     echo %windir%
-    powershell Test-NetConnection 127.0.0.1 -p 9000 | findstr "TcpTestSucceeded : True" >nul
+    :: findstr => always return 0 even if not found the term in the command output
+    :: find => return 0 if matched, else 1
+    powershell Test-NetConnection 127.0.0.1 -p 9000 | find "TcpTestSucceeded : True"
+    echo %ERRORLEVEL%
 goto:eof
 
 
