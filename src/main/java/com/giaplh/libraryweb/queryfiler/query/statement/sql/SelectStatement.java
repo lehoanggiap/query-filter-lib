@@ -3,16 +3,14 @@ package com.giaplh.libraryweb.queryfiler.query.statement.sql;
 import com.giaplh.libraryweb.queryfiler.query.command.sql.SelectCommand;
 import com.giaplh.libraryweb.queryfiler.query.constraint.TableConstraint;
 import com.giaplh.libraryweb.queryfiler.query.expression.ConditionExpression;
-
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.stream.Collectors;
 
 public class SelectStatement<E> extends SQLStatement<CriteriaQuery<E>, SelectCommand> {
-
     private Class<E> rootClass;
 
     public SelectStatement(
@@ -52,13 +50,17 @@ public class SelectStatement<E> extends SQLStatement<CriteriaQuery<E>, SelectCom
 
         Predicate combinePredicate = null;
 
-        tableConstraint.validateFieldConditions(whereCommand.getFieldConditionExpressions());
-        tableConstraint.validateValueConditions(whereCommand.getValueConditionExpressions());
+        tableConstraint.validateFieldConditions(
+            whereCommand.getFieldConditionExpressions()
+        );
+        tableConstraint.validateValueConditions(
+            whereCommand.getValueConditionExpressions()
+        );
 
         for (ConditionExpression conditionExpression : whereCommand.getConditionExpressions()) {
             if (combinePredicate == null) {
-               combinePredicate = conditionExpression.toPredicate(cb, root);
-               continue;
+                combinePredicate = conditionExpression.toPredicate(cb, root);
+                continue;
             }
             combinePredicate = conditionExpression.composite(cb, root, combinePredicate);
         }

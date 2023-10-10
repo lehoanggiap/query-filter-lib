@@ -7,6 +7,8 @@ import javax.persistence.criteria.*;
 public class FieldConditionExpression extends ConditionExpression {
     private String compareField;
 
+    public FieldConditionExpression() {}
+
     public FieldConditionExpression(
         String field,
         LogicalOperator compareOperator,

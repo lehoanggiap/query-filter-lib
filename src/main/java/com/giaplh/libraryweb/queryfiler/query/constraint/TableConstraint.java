@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.giaplh.libraryweb.queryfiler.query.exception.BadRequestException;
 import com.giaplh.libraryweb.queryfiler.query.expression.FieldConditionExpression;
 import com.giaplh.libraryweb.queryfiler.query.expression.ValueConditionExpression;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TableConstraint {
@@ -28,23 +27,30 @@ public class TableConstraint {
         this.exposedColumns = exposedColumns;
     }
 
-    public void validateFieldConditions(List<FieldConditionExpression> fieldConditionExpressions) {
+    public void validateFieldConditions(
+        List<FieldConditionExpression> fieldConditionExpressions
+    ) {
         String field;
         String compareField;
-        for (FieldConditionExpression fieldConditionExpression: fieldConditionExpressions) {
+        for (FieldConditionExpression fieldConditionExpression : fieldConditionExpressions) {
             field = fieldConditionExpression.getField();
             compareField = fieldConditionExpression.getCompareField();
             Class<?> fieldType = exposedColumns.get(field);
             Class<?> compareFieldType = exposedColumns.get(compareField);
-            if(!compareFieldType.isAssignableFrom(fieldType)){
-                log.error("{} can not be compared with {} because they have different type", field, compareField);
+            if (!compareFieldType.isAssignableFrom(fieldType)) {
+                log.error(
+                    "{} can not be compared with {} because they have different type",
+                    field,
+                    compareField
+                );
                 throw new BadRequestException("Invalid compare field of field " + field);
             }
         }
     }
 
-
-    public void validateValueConditions(List<ValueConditionExpression> valueConditionExpressions) {
+    public void validateValueConditions(
+        List<ValueConditionExpression> valueConditionExpressions
+    ) {
         String field;
         String value;
         ObjectMapper objectMapper = new ObjectMapper();

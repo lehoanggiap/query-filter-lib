@@ -13,6 +13,8 @@ public abstract class ConditionExpression implements CommandExpression {
 
     protected SQLCondition sqlCondition;
 
+    protected ConditionExpression() {}
+
     protected ConditionExpression(
         String field,
         LogicalOperator compareOperator,
