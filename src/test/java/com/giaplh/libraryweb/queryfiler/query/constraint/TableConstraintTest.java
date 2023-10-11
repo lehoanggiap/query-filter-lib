@@ -1,30 +1,49 @@
 package com.giaplh.libraryweb.queryfiler.query.constraint;
 
+import com.giaplh.libraryweb.queryfiler.query.constants.SQLCondition;
+import com.giaplh.libraryweb.queryfiler.query.exception.BadRequestException;
+import com.giaplh.libraryweb.queryfiler.query.expression.FieldConditionExpression;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 public class TableConstraintTest {
+    private static final HashMap<String, Class<?>> exposedColumns = new HashMap<>();
 
-    private static final HashSet<String> exposedColumns = new HashSet<>();
+    private static final List<FieldConditionExpression> fieldConditionExpressions = new ArrayList<>();
 
+    private static final List<FieldConditionExpression> validFieldConditionExpressions = new ArrayList<>();
 
     @BeforeAll
     public static void init() {
-        exposedColumns.add("col1");
-        exposedColumns.add("col2");
-        exposedColumns.add("col3");
+        exposedColumns.put("col1", String.class);
+        exposedColumns.put("col2", Integer.class);
+        exposedColumns.put("col3", Double.class);
+        exposedColumns.put("col4", String.class);
+
+        FieldConditionExpression fieldConditionExpression = new FieldConditionExpression();
+        fieldConditionExpression.setField("col1");
+        fieldConditionExpression.setCompareField("col2");
+        fieldConditionExpression.setSqlCondition(SQLCondition.EQUALS);
+        fieldConditionExpressions.add(fieldConditionExpression);
+
+        FieldConditionExpression validFieldConditionExpression = new FieldConditionExpression();
+        validFieldConditionExpression.setField("col1");
+        validFieldConditionExpression.setCompareField("col4");
+        validFieldConditionExpressions.add(validFieldConditionExpression);
     }
 
     @Test
     public void givenNull_whenInitTableConstraint_ThenThrowException() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            TableConstraint tableConstraint = new TableConstraint(null);
-        });
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+                TableConstraint tableConstraint = new TableConstraint(null);
+            }
+        );
     }
 
     @Test
@@ -47,4 +66,24 @@ public class TableConstraintTest {
         Assertions.assertFalse(tableConstraint.validateFields(validFields));
     }
 
+    @Test
+    public void givenValidFieldsConditions_whenValidate_thenThrowException() {
+        TableConstraint tableConstraint = new TableConstraint(exposedColumns);
+        Assertions.assertThrows(
+            BadRequestException.class,
+            () -> {
+                tableConstraint.validateFieldConditions(fieldConditionExpressions);
+            }
+        );
+    }
+
+    @Test
+    public void givenValidFieldsConditions_whenValidate_thenNotThrowException() {
+        TableConstraint tableConstraint = new TableConstraint(exposedColumns);
+        Assertions.assertDoesNotThrow(
+            () -> {
+                tableConstraint.validateFieldConditions(validFieldConditionExpressions);
+            }
+        );
+    }
 }
